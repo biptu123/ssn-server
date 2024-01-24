@@ -34,5 +34,5 @@ app.use("*", function (req, res) {
 
 // listen
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`.bgGreen.white);
+  console.log(`Server running on port:  ${PORT}`.bgGreen.white);
 });
