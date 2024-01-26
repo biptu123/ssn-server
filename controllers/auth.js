@@ -49,7 +49,7 @@ const SendOtpController = async (req, res) => {
         });
       }
       res.status(201).send({
-        success: true,
+        success: smsresponse.return,
         message: smsresponse.message,
       });
     } catch (error) {
