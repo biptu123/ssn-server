@@ -43,14 +43,13 @@ const SendOtpController = async (req, res) => {
       const smsresponse = await fast2sms.sendMessage(options);
       // console.log("SMS res", smsresponse);
       if (!smsresponse) {
-        return res.status(500).send({
+        return res.status(201).send({
           success: false,
           message: "You Exceded your limit try after an hour",
-          error,
         });
       }
       res.status(201).send({
-        success: smsresponse.return,
+        success: true,
         message: smsresponse.message,
       });
     } catch (error) {
