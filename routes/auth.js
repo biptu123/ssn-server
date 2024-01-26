@@ -1,9 +1,5 @@
 const express = require("express");
-const {
-  LoginController,
-  RegisterController,
-  VerifyOtpController,
-} = require("../controllers/auth");
+const { LoginController, SendOtpController } = require("../controllers/auth");
 
 const { requireSignIn } = require("../middlewares/auth");
 
@@ -12,9 +8,11 @@ const router = express.Router();
 
 // routing
 //REGISTER
-router.post("/register", RegisterController);
+// router.post("/register", RegisterController);
+// SEND OTP
+router.post("/sendotp", SendOtpController);
 // VERIFY OTP
-router.post("/verifyotp", VerifyOtpController);
+// router.post("/verifyotp", VerifyOtpController);
 // LOGIN
 router.post("/login", LoginController);
 

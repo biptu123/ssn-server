@@ -3,50 +3,37 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const fast2sms = require("fast-two-sms");
 
-const RegisterController = async (req, res) => {
-  console.log(req.body);
+const SendOtpController = async (req, res) => {
   try {
-    const { name, password, phone } = req.body;
+    console.log(req.body);
+    const { phone } = req.body;
 
     // validation
-    if (!name?.firstName || !name?.lastName || !password || !phone) {
+    if (!phone) {
       return res.status(400).send({
         success: false,
-        message: "All the fileds are required",
+        message: "Phone number is required",
       });
     }
 
-    const user = await User.findOne({
+    let user = await User.findOne({
       phone,
-      verified: true,
     });
 
-    if (user) {
-      return res.status(400).send({
-        success: false,
-        message: "Phone number already exists",
+    if (!user) {
+      user = await User.create({
+        phone,
       });
     }
 
-    const notVerifiedUser = await User.findOne({
-      phone,
-      verified: false,
-    });
-    if (notVerifiedUser) {
-      await User.findByIdAndDelete(notVerifiedUser._id);
-    }
-
-    // register user
-    const hashedPassword = await hashPassword(password);
-
+    // Genarating OTP
     const otp = Math.floor(Math.random() * 9000) + 1000;
-    const newUser = await User.create({
-      name,
-      phone,
-      password: hashedPassword,
-      otp,
-    });
-
+    console.log(otp);
+    const hashedOtp = await hashPassword(`${otp}`);
+    user.otp = hashedOtp;
+    user = await user.save();
+    console.log(user);
+    // Sending SMS
     try {
       var options = {
         authorization: process.env.SMS_API_KEY,
@@ -67,45 +54,6 @@ const RegisterController = async (req, res) => {
         error,
       });
     }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Some Internal Error",
-      error,
-    });
-  }
-};
-
-const VerifyOtpController = async (req, res) => {
-  try {
-    let user = await User.findOne({
-      phone: req.body.phone,
-      otp: req.body.otp,
-    });
-    if (!user) {
-      return res.status(400).send({
-        success: false,
-        message: "Verification Failed",
-      });
-    }
-    try {
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          verified: true,
-        }
-      );
-      res.status(201).send({
-        success: true,
-        message: "Registerd Successfully",
-      });
-    } catch (err) {
-      res.status(500).send({
-        success: false,
-        message: "Internal server error",
-      });
-    }
   } catch (err) {
     res.status(500).send({
       success: false,
@@ -115,19 +63,21 @@ const VerifyOtpController = async (req, res) => {
 };
 
 const LoginController = async (req, res) => {
-  console.log(req.body);
   try {
-    const { phone, password } = req.body;
+    console.log(req.body);
+    const { otp, phone } = req.body;
+
     // validation
-    if (!password || !phone) {
+    if (!otp || !phone) {
       return res.status(400).send({
         success: false,
         message: "All the fileds are required",
       });
     }
 
-    // get user
-    const user = await User.findOne({ phone, verified: true });
+    let user = await User.findOne({
+      phone: phone,
+    });
     // if not found
     if (!user) {
       return res.status(400).send({
@@ -137,14 +87,13 @@ const LoginController = async (req, res) => {
     }
 
     // match
-    const match = await comparePassword(password, user.password);
+    const match = await comparePassword(otp, user.otp);
     if (!match) {
       return res.status(400).send({
         success: false,
         message: "Wrong credentials",
       });
     }
-
     // create token
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -158,14 +107,15 @@ const LoginController = async (req, res) => {
         phone: user.phone,
       },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
     res.status(500).send({
       success: false,
-      message: "Error in Login",
-      error,
+      message: "Internal server error",
     });
   }
 };
 
-module.exports = { RegisterController, LoginController, VerifyOtpController };
+module.exports = {
+  LoginController,
+  SendOtpController,
+};
