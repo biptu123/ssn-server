@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 // Protcted routes token based
 
 const requireSignIn = async (req, res, next) => {
+  console.log(req.body);
   try {
     const decode = jwt.verify(
       req.headers.authorization,
@@ -20,6 +22,8 @@ const requireSignIn = async (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
+  console.log(req);
+
   try {
     const user = await User.findById(req.user._id);
     if (!user.role)
@@ -39,4 +43,4 @@ const isAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { requireSignIn };
+module.exports = { requireSignIn, isAdmin };

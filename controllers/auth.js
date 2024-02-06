@@ -5,7 +5,6 @@ const fast2sms = require("fast-two-sms");
 
 const SendOtpController = async (req, res) => {
   try {
-    console.log(req.body);
     const { phone } = req.body;
 
     // validation
@@ -16,23 +15,10 @@ const SendOtpController = async (req, res) => {
       });
     }
 
-    let user = await User.findOne({
-      phone,
-    });
-
-    if (!user) {
-      user = await User.create({
-        phone,
-      });
-    }
-
     // Genarating OTP
     const otp = Math.floor(Math.random() * 9000) + 1000;
     console.log(otp);
     const hashedOtp = await hashPassword(`${otp}`);
-    user.otp = hashedOtp;
-    user = await user.save();
-    console.log(user);
     // Sending SMS
     try {
       var options = {
@@ -48,6 +34,23 @@ const SendOtpController = async (req, res) => {
           message: "You Exceded your limit try after an hour",
         });
       }
+
+      if (smsresponse.return) {
+        let user = await User.findOne({
+          phone,
+        });
+
+        if (!user) {
+          user = await User.create({
+            phone,
+          });
+        }
+
+        user.otp = hashedOtp;
+        user = await user.save();
+        console.log(user);
+      }
+
       res.status(201).send({
         success: smsresponse.return,
         message: smsresponse.message,
@@ -111,6 +114,7 @@ const LoginController = async (req, res) => {
       user: {
         name: user.name,
         phone: user.phone,
+        role: user.role,
       },
     });
   } catch (err) {
