@@ -1,14 +1,18 @@
 const Category = require("../models/Category");
 const slugify = require("slugify");
 
+const cloudinary = require("../utils/cloudinary");
+
 // Create Category
 const createCategoryController = async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) {
+    // upload the image
+    const { name, image } = req.body;
+
+    if (!name || !image) {
       return res.status(400).send({
         success: false,
-        message: "Name is required",
+        message: "All fields are required",
       });
     }
 
@@ -22,16 +26,34 @@ const createCategoryController = async (req, res) => {
       });
     }
 
-    const category = await Category.create({
-      name,
-      slug: slugify(name),
+    const imageResult = await cloudinary.uploader.upload(image, {
+      folder: "ssn",
+      quality: 60,
+      width: 500,
+      height: 500,
     });
 
-    return res.status(201).send({
-      success: true,
-      message: "New category created",
-      category,
-    });
+    if (imageResult) {
+      const category = await Category.create({
+        name,
+        slug: slugify(name),
+        image: {
+          public_id: imageResult.public_id,
+          url: imageResult.secure_url,
+        },
+      });
+
+      return res.status(201).send({
+        success: true,
+        message: "New category created",
+        category,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Failed to upload",
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -47,19 +69,54 @@ const updateCategoryController = async (req, res) => {
   try {
     console.log(req.params);
     const _id = req.params.id;
-    const { name } = req.body;
-    const catagoty = await Category.findOneAndUpdate(
-      { _id },
+    const { name, image } = req.body;
+    if (!name || !image) {
+      return res.status(400).send({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+    const category = await Category.findById(_id);
+    if (!category) {
+      return res.status(201).send({
+        success: false,
+        message: "Category not found",
+      });
+    }
+    const uploadResult = await cloudinary.uploader.upload(image, {
+      folder: "ssn",
+      quality: 60,
+      width: 500,
+      height: 500,
+    });
+
+    const deleteResult = await cloudinary.api.delete_resources(
+      category.image.public_id,
       {
-        name,
-        slug: slugify(name),
+        type: "upload",
+        resource_type: "image",
       }
     );
-    return res.status(201).send({
-      success: true,
-      message: "Updated Successfully ",
-      catagoty,
-    });
+
+    if (uploadResult && deleteResult) {
+      category.name = name;
+      category.slug = slugify(name);
+      category.image = {
+        public_id: uploadResult.public_id,
+        url: uploadResult.secure_url,
+      };
+      await category.save();
+      return res.status(201).send({
+        success: true,
+        message: "Updated Successfully ",
+        category,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Failed to upload",
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -74,12 +131,26 @@ const updateCategoryController = async (req, res) => {
 const deleteCategoryController = async (req, res) => {
   try {
     const _id = req.params.id;
-    const catagoty = await Category.findOneAndDelete({ _id });
-    return res.status(201).send({
-      success: true,
-      message: "Deleted Successfully ",
-      catagoty,
-    });
+    const category = await Category.findOneAndDelete({ _id });
+    const deleteResult = await cloudinary.api.delete_resources(
+      category.image.public_id,
+      {
+        type: "upload",
+        resource_type: "image",
+      }
+    );
+    if (deleteResult) {
+      return res.status(201).send({
+        success: true,
+        message: "Deleted Successfully ",
+        category,
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message: "Failed to delete",
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
