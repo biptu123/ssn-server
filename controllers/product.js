@@ -97,20 +97,12 @@ const deleteProductController = async (req, res) => {
   try {
     const _id = req.params.id;
     const product = await Product.findOneAndDelete({ _id });
-    // const product = await Product.findOne({ _id });
     const publicIds = product.images.map((image) => image.public_id);
     console.log(publicIds);
     const result = await cloudinary.api.delete_resources(publicIds, {
       type: "upload",
       resource_type: "image",
     });
-
-    console.log(result);
-    // product.images.forEach((image) => {
-    //     cloudinary.uploader.destroy(image.public_id, function (err, result) {
-    //     console.log(result);
-    //   });
-    // });
 
     return res.status(201).send({
       success: true,
@@ -130,7 +122,7 @@ const deleteProductController = async (req, res) => {
 // Get Categories
 const getProductsController = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate("category");
     return res.status(201).send({
       success: true,
       message: "All products",
@@ -150,7 +142,7 @@ const getProductsController = async (req, res) => {
 const getProductController = async (req, res) => {
   try {
     const _id = req.params.id;
-    const product = await Product.findOne({ _id });
+    const product = await Product.findOne({ _id }).populate("category");
     return res.status(201).send({
       success: true,
       message: "Category: ",
