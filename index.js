@@ -25,6 +25,8 @@ app.use(express.static(path.join(__dirname, "./client/build")));
 app.use("/api/v1/auth", require("./routes/auth"));
 app.use("/api/v1/category", require("./routes/catagory"));
 app.use("/api/v1/product", require("./routes/product"));
+app.use("/api/v1/payment", require("./routes/payment"));
+app.use("/api/v1/user", require("./routes/user"));
 
 // rest api
 app.use("*", function (req, res) {

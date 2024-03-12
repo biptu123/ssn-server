@@ -28,9 +28,47 @@ const UserSchema = new mongoose.Schema(
       unique: true,
     },
     address: {
-      type: String,
-      default: null,
+      pincode: {
+        type: Number,
+      },
+      state: {
+        type: String,
+      },
+      street: {
+        type: String,
+      },
+      district: {
+        type: String,
+      },
+      locality: {
+        type: String,
+      },
     },
+    addresses: [
+      {
+        name: {
+          type: String,
+        },
+        email: {
+          type: String,
+        },
+        pincode: {
+          type: Number,
+        },
+        state: {
+          type: String,
+        },
+        street: {
+          type: String,
+        },
+        district: {
+          type: String,
+        },
+        locality: {
+          type: String,
+        },
+      },
+    ],
     verified: {
       type: Boolean,
       default: false,

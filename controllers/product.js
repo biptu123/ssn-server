@@ -146,7 +146,7 @@ const getProductController = async (req, res) => {
     return res.status(201).send({
       success: true,
       message: "Category: ",
-      category,
+      product,
     });
   } catch (error) {
     console.log(error);

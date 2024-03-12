@@ -27,7 +27,7 @@ const SendOtpController = async (req, res) => {
         numbers: [phone],
       };
       const smsresponse = await fast2sms.sendMessage(options);
-      // console.log("SMS res", smsresponse);
+      console.log("SMS res", smsresponse);
       if (!smsresponse) {
         return res.status(201).send({
           success: false,

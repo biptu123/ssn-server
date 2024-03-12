@@ -4,12 +4,13 @@ const User = require("../models/User");
 // Protcted routes token based
 
 const requireSignIn = async (req, res, next) => {
-  console.log(req.body);
+  console.log(req.headers.authorization);
   try {
     const decode = jwt.verify(
       req.headers.authorization,
       process.env.JWT_SECRET
     );
+    console.log(decode);
     req.user = decode;
     next();
   } catch (error) {
@@ -22,8 +23,6 @@ const requireSignIn = async (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
-  console.log(req);
-
   try {
     const user = await User.findById(req.user._id);
     if (!user.role)
