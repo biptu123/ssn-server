@@ -28,6 +28,15 @@ const UserSchema = new mongoose.Schema(
       unique: true,
     },
     address: {
+      name: {
+        type: String,
+      },
+      email: {
+        type: String,
+      },
+      phone: {
+        type: String,
+      },
       pincode: {
         type: Number,
       },
@@ -50,6 +59,9 @@ const UserSchema = new mongoose.Schema(
           type: String,
         },
         email: {
+          type: String,
+        },
+        phone: {
           type: String,
         },
         pincode: {

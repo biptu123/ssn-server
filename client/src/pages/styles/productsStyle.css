@@ -1,0 +1,198 @@
+.products-container {
+  width: 100%;
+  margin-left: 80px;
+  padding-bottom: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.products-title {
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: auto;
+  margin-bottom: 100px;
+}
+.products-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  top: 5px;
+  right: 10px;
+  width: 5px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #c84747;
+}
+
+.products-title-content {
+  text-transform: capitalize;
+}
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  padding: 20px;
+  justify-content: center;
+}
+
+.product {
+  margin: 5px;
+  flex: 0 0 auto;
+  width: 23rem;
+  min-height: 30rem;
+  box-shadow: 10px -10px 10px rgba(0, 0, 0, 0.5);
+  border-color: #494a4b;
+  /* border-top: 1px solid; */
+  border-left: 1px solid;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 0.5rem;
+  position: relative;
+  background-color: #7d998ed3;
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 3/2;
+  margin-top: 0;
+  object-fit: cover;
+}
+.product-discount {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  width: 70px;
+  padding: 0;
+  border: none;
+  transform: rotate(5deg);
+  transform-origin: center;
+  font-family: "Gochi Hand", cursive;
+  text-decoration: none;
+  font-size: 15px;
+  cursor: pointer;
+  padding-bottom: 3px;
+  border-radius: 5px;
+  box-shadow: 0 2px 0 #494a4b;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background-color: #5cdb95;
+}
+
+.product-discount span {
+  background: #f1f5f8;
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: 2px solid #494a4b;
+  position: relative;
+}
+
+.product-discount span::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 0.7rem;
+  width: 0.7rem;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.product-discount:hover {
+  transform: translateY(5px);
+  padding-bottom: 0px;
+  outline: 0;
+}
+
+.bestdeal-product img {
+  width: 100%;
+  height: 60%;
+  margin: 0;
+  object-fit: cover;
+}
+
+.show-more {
+  background: none;
+  border: none;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-left: 30px;
+  margin-right: auto;
+  transition: 0.5s ease-in-out;
+  position: relative;
+}
+.show-more:hover {
+  margin-left: 40px;
+}
+.show-more::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 100%;
+  background-color: #3b3838;
+  border-radius: 10px;
+  height: 5px;
+  transition: 0.5s ease-in-out;
+}
+.show-more:hover::before {
+  right: 0;
+}
+
+@media (max-width: 450px) {
+  .product {
+    width: 60vw;
+    min-height: 300px;
+  }
+}
+/* 380 */
+@media (min-width: 450px) and (max-width: 520px) {
+  .product {
+    width: 90%;
+    height: 400px;
+  }
+
+  .price-info p {
+    margin: 0;
+    font-weight: 700;
+    font-size: 0.7rem;
+    font-family: "Courier New", Courier, monospace;
+    color: rgb(31, 31, 202);
+  }
+
+  .products-title {
+    /* padding-top: 10rem; */
+  }
+}
+@media (min-width: 520px) and (max-width: 680px) {
+}
+@media (min-width: 552px) and (max-width: 991px) {
+}
+
+.gradient-loop {
+  /* width: 300px; */
+  /* height: 200px; */
+  background: linear-gradient(0deg, #db955c, #e6dede);
+  background-size: 400% 400%;
+  /* animation: gradientAnimation 10s infinite; */
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}

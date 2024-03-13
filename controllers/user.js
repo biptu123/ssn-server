@@ -2,12 +2,9 @@ const User = require("../models/User");
 const slugify = require("slugify");
 
 const addAddessController = async (req, res) => {
-  console.log("here");
   try {
     const { address } = req.body;
 
-    console.log(address);
-    console.log(address.pincode);
     if (!address) {
       return res.status(400).send({
         success: false,
@@ -16,17 +13,25 @@ const addAddessController = async (req, res) => {
     }
 
     const user = await User.findById(req.user._id);
-    user.addresses = [...user.addresses, address];
+    if (address._id) {
+      user.addresses = user.addresses.map((item) => {
+        if (item._id == address._id) {
+          return address;
+        }
+        return item;
+      });
+    } else {
+      user.addresses = [...user.addresses, address];
+    }
 
     user.address = address;
 
     const updatedUser = await user.save();
-    console.log(updatedUser);
 
     return res.status(201).send({
       success: true,
       message: "New address added",
-      updatedUser,
+      user,
     });
   } catch (error) {
     // console.log(error);
@@ -64,17 +69,23 @@ const makePrimaryController = async (req, res) => {
 const removeAddressController = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    user.addresses = user.addresses.filter(
-      (address) => !_.isEqual(address, req.body.address)
-    );
 
-    if (_.isEqual(user.address, req.body.address)) user.address = null;
+    // Filter out the address to be removed
+
+    const upDatedAddress = [];
+    user.addresses.forEach((address) => {
+      if (!address._id.equals(req.body.address._id)) {
+        upDatedAddress.push(address);
+      }
+    });
+
+    user.addresses = upDatedAddress;
 
     const updatedUser = await user.save();
 
     return res.status(201).send({
       success: true,
-      message: "Deleted Successfully ",
+      message: "Deleted Successfully",
       updatedUser,
     });
   } catch (error) {
@@ -87,8 +98,28 @@ const removeAddressController = async (req, res) => {
   }
 };
 
+const getAddessesController = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const addresses = user.addresses;
+
+    return res.status(201).send({
+      success: true,
+      message: "Successful",
+      addresses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to get addresses",
+      error,
+    });
+  }
+};
 module.exports = {
   addAddessController,
   makePrimaryController,
   removeAddressController,
+  getAddessesController,
 };
