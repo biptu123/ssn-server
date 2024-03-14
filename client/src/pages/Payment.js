@@ -52,6 +52,7 @@ const Payment = () => {
           ...auth,
           address: null,
         });
+        navigate("/user");
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || "Internal Server Error");
