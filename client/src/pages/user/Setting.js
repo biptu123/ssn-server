@@ -33,27 +33,14 @@ const Setting = () => {
           </div>
           <div className="form-group row my-2">
             <label htmlFor="inputName2" className="col-sm-2 col-form-label">
-              Name
+              Photo
             </label>
             <div className="col-sm-10">
               <input
-                type="text"
+                type="file"
                 className="form-control"
                 id="inputName2"
                 placeholder="Name"
-              />
-            </div>
-          </div>
-          <div className="form-group row my-2">
-            <label htmlFor="inputSkills" className="col-sm-2 col-form-label">
-              Skills
-            </label>
-            <div className="col-sm-10">
-              <input
-                type="text"
-                className="form-control"
-                id="inputSkills"
-                placeholder="Skills"
               />
             </div>
           </div>

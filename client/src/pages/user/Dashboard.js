@@ -7,16 +7,38 @@ import Orders from "./Orders";
 import Wishlist from "./Wishlist";
 import Setting from "./Setting";
 import { useAuth } from "../../context/auth";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [active, setActive] = useState("orders");
   const [auth, setAuth] = useAuth();
-
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const getUser = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/user`,
+        {
+          headers: {
+            Authorization: `${auth?.token}`,
+          },
+        }
+      );
+      if (response?.data?.success) {
+        console.log(response?.data?.user);
+        setUser(response?.data?.user);
+      } else {
+        toast.error(response?.data?.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
 
-  const getUser = async () => {};
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <>
@@ -37,7 +59,7 @@ const Dashboard = () => {
                 <div className="container-fluid">
                   <div className="row">
                     <div className="col-md-3">
-                      <Account />
+                      <Account user={user} />
                     </div>
                     <div className="col-md-9">
                       <div className="card">

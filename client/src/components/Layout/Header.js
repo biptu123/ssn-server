@@ -136,7 +136,7 @@ const Header = () => {
             ) : (
               <>
                 <NavLinkButton
-                  to={auth.user.role === 1 ? "/admin" : "user"}
+                  to={auth.user.role === 1 ? "/admin" : "/user"}
                   onClick={handleNavigation}
                 >
                   Dashboard

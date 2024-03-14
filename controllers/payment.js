@@ -6,7 +6,19 @@ const request = require("request");
 
 const checkoutController = async (req, res) => {
   try {
-    const { amount } = req.body;
+    const { amount, products, address } = req.body;
+
+    const productOrder = await Order.create({
+      user: req.user._id,
+      address,
+      products: products.map((product) => ({
+        product: product._id,
+        noOfItems: product.noOfItems,
+      })),
+    });
+
+    console.log(productOrder);
+
     if (!amount || isNaN(Number(amount))) {
       return res.status(500).send({
         success: false,
@@ -24,6 +36,7 @@ const checkoutController = async (req, res) => {
       success: true,
       order,
       key: process.env.RAZORPAY_API_KEY,
+      productOrder,
     });
   } catch (error) {
     console.log(error);
@@ -38,12 +51,11 @@ const checkoutController = async (req, res) => {
 const verificationController = async (req, res) => {
   try {
     const {
-      user,
-      products,
       orderCreationId,
       razorpay_payment_id,
       razorpay_order_id,
       razorpay_signature,
+      productOrder,
     } = req.body;
 
     const body = razorpay_order_id + "|" + razorpay_payment_id;
@@ -55,14 +67,12 @@ const verificationController = async (req, res) => {
 
     if (expectedSignature === razorpay_signature) {
       // Store into database
-      const order = await Order.create({
-        user,
-        razorpay_payment_id,
-        products: products.map((product) => ({
-          product: product._id,
-          noOfItems: product.noOfItems,
-        })),
-      });
+      const order = await Order.findById(productOrder._id);
+
+      order.razorpay_payment_id = razorpay_payment_id;
+      order.status = "placed";
+
+      await order.save();
 
       // Payment successful
       return res.status(200).json({

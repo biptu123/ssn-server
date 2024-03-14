@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Order = require("../models/Order");
 const slugify = require("slugify");
 
 const addAddessController = async (req, res) => {
@@ -117,9 +118,49 @@ const getAddessesController = async (req, res) => {
     });
   }
 };
+
+const getUsersController = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    console.log(user);
+    return res.status(201).send({
+      success: true,
+      message: "Successful",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to get user",
+      error,
+    });
+  }
+};
+const getOrdersController = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user._id });
+
+    return res.status(201).send({
+      success: true,
+      message: "Successful",
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Failed to get orders",
+      error,
+    });
+  }
+};
 module.exports = {
   addAddessController,
   makePrimaryController,
   removeAddressController,
   getAddessesController,
+  getUsersController,
+  getOrdersController,
 };

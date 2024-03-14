@@ -11,6 +11,7 @@ import {
 } from "./styles/Cart.styled";
 import { useCart } from "../context/cart";
 import axios from "axios";
+// eslint-disable-next-line
 import useRazorpay from "react-razorpay";
 import { toast } from "react-toastify";
 
@@ -33,12 +34,12 @@ const Payment = () => {
     razorpay_order_id,
     razorpay_signature,
     order,
+    productOrder,
   }) => {
     setLoading(true);
     try {
       const response = await axios.post("/api/v1/payment/verification", {
-        user: auth?.user?._id,
-        products: cart,
+        productOrder,
         orderCreationId: order.id,
         razorpay_payment_id,
         razorpay_order_id,
@@ -62,14 +63,21 @@ const Payment = () => {
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`/api/v1/payment/checkout`, {
-        products: cart,
-        amount: totalAmount,
-        address: auth.address,
-        user: auth.user,
-      });
+      const response = await axios.post(
+        `/api/v1/payment/checkout`,
+        {
+          products: cart,
+          amount: totalAmount,
+          address: auth.address,
+        },
+        {
+          headers: {
+            Authorization: `${auth?.token}`,
+          },
+        }
+      );
       if (response?.data?.success) {
-        const { order, key } = response.data;
+        const { order, key, productOrder } = response.data;
         const options = {
           key, // Enter the Key ID generated from the Dashboard
           amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -88,6 +96,7 @@ const Payment = () => {
               razorpay_order_id,
               razorpay_signature,
               order,
+              productOrder,
             });
           },
           prefill: {

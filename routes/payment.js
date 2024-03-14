@@ -1,4 +1,6 @@
 const express = require("express");
+const { requireSignIn } = require("../middlewares/auth");
+
 const {
   checkoutController,
   verificationController,
@@ -7,7 +9,7 @@ const {
 } = require("../controllers/payment");
 const router = express.Router();
 
-router.post("/checkout", checkoutController);
+router.post("/checkout", requireSignIn, checkoutController);
 router.post("/verification", verificationController);
 router.post("/get-token", getToken);
 router.post("/create-payment", createPayment);

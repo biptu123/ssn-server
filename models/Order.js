@@ -4,12 +4,37 @@ const OrderSchema = new mongoose.Schema(
   {
     razorpay_payment_id: {
       type: String,
-      required: true,
-      unique: false,
     },
     user: {
       type: mongoose.ObjectId,
       ref: "user",
+      required: true,
+    },
+    address: {
+      name: {
+        type: String,
+      },
+      email: {
+        type: String,
+      },
+      phone: {
+        type: String,
+      },
+      pincode: {
+        type: Number,
+      },
+      state: {
+        type: String,
+      },
+      street: {
+        type: String,
+      },
+      district: {
+        type: String,
+      },
+      locality: {
+        type: String,
+      },
     },
     products: [
       {
@@ -25,8 +50,8 @@ const OrderSchema = new mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ["placed", "shipped", "delivered", "cancelled"],
-      default: "placed",
+      enum: ["pending", "placed", "shipped", "delivered", "cancelled"],
+      default: "pending",
     },
   },
   { timestamp: true }
