@@ -19,12 +19,14 @@ const Payment = () => {
   const [auth, setAuth] = useAuth();
   const { cart, emptyCart } = useCart();
   const [totalAmount, setTotalAmount] = useState(0);
-  const [Razorpay] = useRazorpay();
+  const [accessToken, setAccessToken] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!auth.address) {
       navigate("/checkout");
+    } else {
+      getToken();
     }
   }, [auth?.address]);
 
@@ -58,53 +60,37 @@ const Payment = () => {
 
     setLoading(false);
   };
-
-  const handleCheckout = async () => {
+  const getToken = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`/api/v1/payment/checkout`, {
+      const response = await axios.post(`/api/v1/payment/get-token`, {
         products: cart,
         amount: totalAmount,
         address: auth.address,
         user: auth.user,
       });
       if (response?.data?.success) {
-        const { order, key } = response.data;
-        const options = {
-          key, // Enter the Key ID generated from the Dashboard
-          amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-          currency: "INR",
-          name: "Stormscience Nutration",
-          description: "Test Transaction",
-          image: { logo },
-          order_id: order.id,
-          handler: async function ({
-            razorpay_payment_id,
-            razorpay_order_id,
-            razorpay_signature,
-          }) {
-            await handlePayment({
-              razorpay_payment_id,
-              razorpay_order_id,
-              razorpay_signature,
-              order,
-            });
-          },
-          prefill: {
-            name: auth?.address?.name,
-            email: auth?.address?.email,
-            contact: auth?.address?.phone,
-          },
-          notes: {
-            address: "Razorpay Corporate Office",
-          },
-          theme: {
-            color: "#133337",
-          },
-        };
-        const razor = new Razorpay(options);
+        setAccessToken(response?.data?.accessToken);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
 
-        razor.open();
+    setLoading(false);
+  };
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`/api/v1/payment/create-payment`, {
+        products: cart,
+        amount: totalAmount,
+        address: auth.address,
+        user: auth.user,
+        accessToken,
+      });
+      console.log(response);
+      if (response?.data?.success) {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
