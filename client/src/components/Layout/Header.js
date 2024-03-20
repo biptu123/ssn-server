@@ -14,9 +14,18 @@ const Toggler = ({ toggleFlag, setToggleFlag }) => {
         htmlFor="checkbox"
         onClick={() => setToggleFlag(!toggleFlag)}
       >
-        <div id="bar1" className={`bars ${toggleFlag ? "open" : null}`} />
-        <div id="bar2" className={`bars ${toggleFlag ? "open" : null}`} />
-        <div id="bar3" className={`bars ${toggleFlag ? "open" : null}`} />
+        <div
+          id="bar1"
+          className={`bars ${toggleFlag ? "open bg-light" : null}`}
+        />
+        <div
+          id="bar2"
+          className={`bars ${toggleFlag ? "open bg-light" : null}`}
+        />
+        <div
+          id="bar3"
+          className={`bars ${toggleFlag ? "open bg-light" : null}`}
+        />
       </label>
     </div>
   );
@@ -110,14 +119,18 @@ const Header = () => {
       <Offcanvas
         show={toggleFlag}
         onHide={() => setToggleFlag(false)}
-        placement="end" // Use 'start' to open from the left
+        placement="end"
+        className="w-100 text-light"
+        style={{
+          background: "#31363F",
+        }}
       >
         <Offcanvas.Header>
           <Toggler toggleFlag={toggleFlag} setToggleFlag={setToggleFlag} />
         </Offcanvas.Header>
 
         <Offcanvas.Body>
-          <ul className="navbar-nav justify-content-center flex-grow-1 pe-3">
+          <ul className="navbar-nav justify-content-center  flex-grow-1 pe-3">
             <NavLinkButton to="/" onClick={handleNavigation}>
               Home
             </NavLinkButton>
@@ -148,35 +161,40 @@ const Header = () => {
         </Offcanvas.Body>
       </Offcanvas>
 
-      <Navbar.Collapse id="navbarNav" className="justify-content-end mx-3">
-        <Nav className="flex-grow-1 pe-3">
-          <NavLinkButton to="/" onClick={handleNavigation}>
-            Home
-          </NavLinkButton>
-          <NavLinkButton to="/about" onClick={handleNavigation}>
-            About
-          </NavLinkButton>
-          <NavLinkButton to="/products" onClick={handleNavigation}>
-            Products
-          </NavLinkButton>
-          <NavLinkButton to="/contact" onClick={handleNavigation}>
-            Contact
-          </NavLinkButton>
-          {!auth?.user ? (
-            <LoginButton className="m-login" onClick={handleNavigation} />
-          ) : (
-            <>
-              <NavLinkButton
-                to={auth.user.role === 1 ? "/admin" : "user"}
-                onClick={handleNavigation}
-              >
-                Dashboard
-              </NavLinkButton>
-              <DropdownMenu className="m-login" />
-            </>
-          )}
-        </Nav>
-      </Navbar.Collapse>
+      {toggleFlag ? null : (
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          className="justify-content-end mx-3"
+        >
+          <Nav className="flex-grow-1 pe-3">
+            <NavLinkButton to="/" onClick={handleNavigation}>
+              Home
+            </NavLinkButton>
+            <NavLinkButton to="/about" onClick={handleNavigation}>
+              About
+            </NavLinkButton>
+            <NavLinkButton to="/products" onClick={handleNavigation}>
+              Products
+            </NavLinkButton>
+            <NavLinkButton to="/contact" onClick={handleNavigation}>
+              Contact
+            </NavLinkButton>
+            {!auth?.user ? (
+              <LoginButton className="m-login" onClick={handleNavigation} />
+            ) : (
+              <>
+                <NavLinkButton
+                  to={auth.user.role === 1 ? "/admin" : "user"}
+                  onClick={handleNavigation}
+                >
+                  Dashboard
+                </NavLinkButton>
+                <DropdownMenu className="m-login" />
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      )}
 
       <Nav className="d-flex flex-row justify-content-end">
         {!auth?.user ? (

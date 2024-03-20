@@ -138,6 +138,7 @@ const getUsersController = async (req, res) => {
     });
   }
 };
+
 const getOrdersController = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user._id });

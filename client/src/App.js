@@ -18,6 +18,7 @@ import BestDeals from "./pages/admin/BestDeals";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
+import Return from "./pages/policy/Return";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path="/product/:id" Component={ProductDetails} />
         <Route path="/login" Component={Signin} />
         <Route path="/cart" Component={Cart} />
+        <Route path="/returnpolicy" Component={Return} />
         <Route path="/*" Component={NotFound} />
       </Routes>
     </>

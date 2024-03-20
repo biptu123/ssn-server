@@ -1,7 +1,8 @@
 import React from "react";
 import "./style.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <>
       <footer
@@ -11,11 +12,11 @@ const Footer = () => {
         {/* Section: Social media */}
         <section
           className="d-flex justify-content-between p-4 text-white"
-          style={{ backgroundColor: "#21D192" }}
+          style={{ backgroundColor: "#31363F" }}
         >
           {/* Left */}
           <div className="me-5">
-            <span>Get connected with us on social networks:</span>
+            <span>Get connected with us on social networks</span>
           </div>
           {/* Left */}
           {/* Right */}
@@ -46,45 +47,37 @@ const Footer = () => {
         <section>
           <div className="container text-center text-md-start mt-5">
             <div className="row mt-3">
-              <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <div className="col-md-6 col-lg-6 col-xl-6 mx-auto mb-4">
                 <h6 className="text-uppercase fw-bold">
                   Stormscience Nutration
                 </h6>
                 <hr
                   className="mb-4 mt-0 d-inline-block mx-auto"
-                  style={{ width: 60, backgroundColor: "#7c4dff", height: 2 }}
+                  style={{
+                    width: 60,
+                    backgroundColor: "#7c4dff",
+                    height: 2,
+                  }}
                 />
-                <p>
-                  Here you can use rows and columns to organize your footer
-                  content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                  elit.
-                </p>
-              </div>
-              <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                <h6 className="text-uppercase fw-bold">Products</h6>
-                <hr
-                  className="mb-4 mt-0 d-inline-block mx-auto"
-                  style={{ width: 60, backgroundColor: "#7c4dff", height: 2 }}
-                />
-                <p>
-                  <a href="#!" className="text-dark">
-                    MDBootstrap
-                  </a>
-                </p>
-                <p>
-                  <a href="#!" className="text-dark">
-                    MDWordPress
-                  </a>
-                </p>
-                <p>
-                  <a href="#!" className="text-dark">
-                    BrandFlow
-                  </a>
-                </p>
-                <p>
-                  <a href="#!" className="text-dark">
-                    Bootstrap Angular
-                  </a>
+                <p
+                  style={{
+                    textAlign: "justify",
+                    textJustify: "inter-word",
+                  }}
+                >
+                  Our company is passionate about providing top-notch
+                  supplements tailored for gym enthusiasts and fitness
+                  enthusiasts. We understand the importance of quality nutrition
+                  in achieving fitness goals, which is why we offer a range of
+                  supplements specifically designed to support muscle growth,
+                  recovery, and performance. From high-quality protein powders
+                  to advanced creatine formulas, our products are formulated
+                  using the latest scientific research and the finest
+                  ingredients. Whether you're looking to build lean muscle,
+                  improve strength, or enhance endurance, our supplements are
+                  here to help you reach your fitness potential. Elevate your
+                  workouts and achieve your fitness goals with our premium
+                  gym-focused supplements.
                 </p>
               </div>
               <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
@@ -94,23 +87,48 @@ const Footer = () => {
                   style={{ width: 60, backgroundColor: "#7c4dff", height: 2 }}
                 />
                 <p>
-                  <a href="#!" className="text-dark">
+                  <a
+                    href="#"
+                    onClick={() => navigate("/user")}
+                    className="text-dark"
+                  >
                     Your Account
                   </a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">
-                    Become an Affiliate
+                  <a
+                    href="#"
+                    onClick={() => navigate("/refundpolicy")}
+                    className="text-dark"
+                  >
+                    Refund Policy
                   </a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">
-                    Shipping Rates
+                  <a
+                    href="#"
+                    onClick={() => navigate("/returnpolicy")}
+                    className="text-dark"
+                  >
+                    Return Ploicy
                   </a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">
-                    Help
+                  <a
+                    href="#"
+                    onClick={() => navigate("/shippingpolicy")}
+                    className="text-dark"
+                  >
+                    Shipping Policy
+                  </a>
+                </p>
+                <p>
+                  <a
+                    href="#"
+                    onClick={() => navigate("/terms-and-conditions")}
+                    className="text-dark"
+                  >
+                    Terms And Conditions
                   </a>
                 </p>
               </div>
@@ -121,16 +139,15 @@ const Footer = () => {
                   style={{ width: 60, backgroundColor: "#7c4dff", height: 2 }}
                 />
                 <p>
-                  <i className="fas fa-home mr-3" /> New York, NY 10012, US
+                  <i className="fas fa-home mr-3" /> Karimganj, Assam, India,
+                  788710
                 </p>
                 <p>
-                  <i className="fas fa-envelope mr-3" /> info@example.com
+                  <i className="fas fa-envelope mr-3" />{" "}
+                  admin@stormsciencenutrition.in
                 </p>
                 <p>
-                  <i className="fas fa-phone mr-3" /> + 01 234 567 88
-                </p>
-                <p>
-                  <i className="fas fa-print mr-3" /> + 01 234 567 89
+                  <i className="fas fa-phone mr-3" /> +91 8136 048 529
                 </p>
               </div>
             </div>
@@ -140,9 +157,9 @@ const Footer = () => {
           className="text-center p-3"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
         >
-          © 2020 Copyright:
-          <a className="text-dark" href="https://mdbootstrap.com/">
-            MDBootstrap.com
+          Copyright © 2024 All rights reserved&nbsp;
+          <a className="text-dark" href="https://stormsciencenutrition.in/">
+            Stormsciencenutrition
           </a>
         </div>
       </footer>
